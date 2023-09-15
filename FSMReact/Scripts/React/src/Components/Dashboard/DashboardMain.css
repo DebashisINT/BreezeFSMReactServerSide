@@ -1,0 +1,187 @@
+.mapShowlist li .tootip {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.newStyleMN .widgBox .icon {
+    position: absolute;
+    left: -32px;
+    top: 28px;
+    border-radius: 6px;
+}
+
+.newStyleMN .widgBox .txt {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-family: 'Poppins', sans-serif !important;
+    padding-left: 0px;
+    font-weight: 400;
+    font-size: 14px;
+    margin-top: -9px;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.dtday {
+    font-size: 13px;
+}
+
+.newStyleMN .widgBox .Numb {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500;
+    font-size: 32px;
+    /*color: #083a72;*/
+    color: #fff;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.newStyleMN .widgBox.active .Numb {
+    color: #fff;
+}
+
+.newStyleMN .widgBox {
+    border-radius: 15px;
+    padding: 15px;
+    padding-bottom: 15px;
+}
+
+.newStyleMN .lspacer {
+    padding-left: 5px
+}
+
+.flex-itm.scr:not(:last-child) .widgBox {
+    margin-right: 30px;
+}
+
+/* .float-right {
+    float: right;
+} */
+
+#summary-show-btn img {
+    width: 30px;
+}
+
+.ag-theme-alpine .ag-header
+{
+    height: auto !important;
+    min-height: 80px !important;
+}
+
+.ag-header.ag-header-allow-overflow .ag-header-row
+{
+    height: 40px !important;
+    background-color: #094e8c;
+    color: #fff;
+    width: 100% !important;
+    font-weight: 400;
+}
+
+.ag-theme-alpine .ag-row, .ag-theme-alpine-dark .ag-row
+{
+    font-weight: 400 !important;
+    font-size: 14px !important;
+}
+
+
+
+
+.ag-theme-alpine {
+    --ag-header-height: 30px;
+    --ag-header-foreground-color: white;
+    --ag-header-background-color: black;
+    --ag-header-cell-hover-background-color: rgb(80, 40, 140);
+    --ag-header-cell-moving-background-color: rgb(80, 40, 140);
+    font-family: 'Poppins', sans-serif !important;
+  }
+  /* .ag-theme-alpine .ag-header {
+    font-family: cursive;
+  }
+  .ag-theme-alpine .ag-header-group-cell {
+    font-weight: normal;
+    font-size: 22px;
+  }*/
+  .ag-theme-alpine .ag-header-cell {
+    /* font-size: 18px; */
+    
+    border-right: 1px solid #999999 !important;
+    padding: 8px 8px !important;
+  } 
+
+  .ag-header.ag-header-allow-overflow .ag-header-row.ag-header-row-column-filter
+{
+    top: 40px !important;
+    background-color: #f4f4f4 !important;
+    color: #222 !important;
+}
+
+.ag-cell-label-container
+{
+    padding: 0px 0px !important;
+}
+
+.ag-header-icon {
+    color: #ffffff !important;
+}
+
+.ag-header-cell-resize::after
+{
+    display: none !important;
+}
+
+.ag-ltr .ag-cell
+{
+    border: none;
+    border-right: 1px solid #e7e7e7 !important;
+    padding: 5px 10px !important;
+}
+
+.ag-ltr .ag-cell-focus:not(.ag-cell-range-selected):focus-within, .ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected), .ag-ltr .ag-full-width-row.ag-row-focus:focus .ag-cell-wrapper.ag-row-group, .ag-ltr .ag-cell-range-single-cell, .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle, .ag-rtl .ag-cell-focus:not(.ag-cell-range-selected):focus-within, .ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected), .ag-rtl .ag-full-width-row.ag-row-focus:focus .ag-cell-wrapper.ag-row-group, .ag-rtl .ag-cell-range-single-cell, .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle
+{
+    border-color: #2196f3 !important;
+}
+
+.ag-cell, .ag-full-width-row .ag-cell-wrapper.ag-row-group
+{
+    line-height: 26px !important;
+}
+
+
+  .ag-theme-alpine .ag-row-detail-cell .ag-row-detail-cell-inner {
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  .ag-theme-alpine .ag-header-cell:last-child
+  {
+    border-right: none !important;
+  }
+
+  .image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .image-overlay img {
+    max-width: 80%;
+    max-height: 80%;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }

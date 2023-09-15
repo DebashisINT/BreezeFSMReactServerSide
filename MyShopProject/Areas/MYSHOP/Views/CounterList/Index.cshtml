@@ -1,0 +1,812 @@
+﻿@*====================================================== Revision History =================================================================================================*@
+@*Rev Number         DATE              VERSION          DEVELOPER           CHANGES*@
+@*1.0                13-01-2023        2.0.38           Pallab              25576: Report page design modification *@
+@*2.0                23-01-2023        2.0.38           Debashis            Multiple contact information to be displayed in the Shops report.Refer: 0025585*@
+@*3.0                24-01-2023        2.0.38           Pallab              Multiple contact information checkbox width issue fix*@
+@*====================================================== Revision History =================================================================================================*@
+
+@model Models.CounterClass
+
+@{
+    ViewBag.Title = "Shop";
+
+    var purl = System.Configuration.ConfigurationSettings.AppSettings["SiteURL"];
+}
+
+<style>
+    #mask {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        visibility: hidden;
+        z-index: -2;
+        background: #000;
+        background: rgba(0,0,0,0.8);
+        overflow: hidden;
+        opacity: 0;
+        transition: all .5s ease-in-out;
+    }
+
+        #mask.showing {
+            opacity: 1;
+            z-index: 9000;
+            visibility: visible;
+            overflow: auto;
+            transition: all .5s ease-in-out;
+        }
+
+    #boxes {
+        display: table;
+        width: 100%;
+        height: 100%;
+    }
+
+    .window {
+        max-width: 780px;
+        z-index: 9999;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        margin: auto;
+        background-color: #ffffff;
+        font-family: 'Segoe UI Light', sans-serif;
+        font-size: 15pt;
+        margin-top: 30px;
+        position: relative;
+    }
+
+        .window img {
+            width: 100%;
+            height: auto;
+        }
+
+    .inner {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    #popupfoot {
+        font-size: 16pt;
+    }
+
+    .showImage {
+        margin: 0 0 3em;
+        display: table;
+        text-align: center;
+    }
+
+        .showImage img {
+            display: block;
+        }
+
+
+    #maskmap {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        visibility: hidden;
+        z-index: -2;
+        background: #000;
+        background: rgba(0,0,0,0.8);
+        overflow: hidden;
+        opacity: 0;
+        transition: all .5s ease-in-out;
+    }
+
+        #maskmap.showing {
+            opacity: 1;
+            z-index: 9000;
+            visibility: visible;
+            overflow: auto;
+            transition: all .5s ease-in-out;
+        }
+
+    #boxesmap {
+        display: table;
+        width: 100%;
+        height: 100%;
+    }
+
+    #popupfootmap {
+        font-size: 16pt;
+    }
+</style>
+
+
+<style>
+    .modal-content {
+        border-radius: 0px;
+    }
+
+    .modal-header {
+        background-color: #007DB4;
+        color: white;
+    }
+
+    .modal-body {
+        height: 440px;
+    }
+
+    .list-inline > li {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .showing .close {
+        opacity: .8;
+        width: 40px;
+        height: 40px;
+        line-height: 37px;
+        border-radius: 50%;
+        display: block;
+        text-shadow: none;
+        background: #5d5d5d;
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        color: #fff;
+    }
+
+        .showing .close:hover {
+            color: #fff;
+            opacity: 1;
+        }
+</style>
+
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBif3telvlrJn61kkLXDQA0ViQdDVJWifk"></script>
+<script src="~/Scripts/chosen/chosen.jquery.min.js"></script>
+
+
+<link href="~/Scripts/chosen/chosen.min.css" rel="stylesheet" />
+
+<script>
+    var arr = [];
+    var typeId;
+    var Ispageload = "0";
+
+    $(function () {
+        var lookup = ASPxClientControl.GetControlCollection().GetByName("StateGridLookup");
+        lookup.GetGridView().Refresh();
+
+        var lookup = ASPxClientControl.GetControlCollection().GetByName("StateGridLookup");
+        lookup.GetGridView().Refresh();
+
+        $("#drpuser").chosen({
+            width: "100%"
+        });
+
+        $("#drpstate").chosen({
+            width: "100%"
+        });
+
+
+
+
+        //$('body').on('click', '#btnshow', function () {
+        $('body').on('click', '#btnshow', function (e) {
+            var flag = true;
+            if ($("#hdnStateMandatory").val() == "True") {
+                if (StateId == "") {
+                    jAlert("Please select State.");
+                    flag = false;
+                    return;
+                }
+            }
+            arr = [];
+
+            $('input.acheckbox:checkbox:checked').each(function () {
+                arr.push($(this).val());
+            });
+            typeId = arr.toString();
+            if (flag) {
+                if (typeId != "" && typeId != null) {
+                    Ispageload = "1";
+                    gridCounterList.Refresh();
+                    //   gridCounterList.Refresh();
+                }
+                else {
+                    jAlert('Please select Shop Types');
+                    return;
+                }
+            }
+            //$("#refreshgrid\counter").show();
+
+
+        });
+
+
+
+        $('.window .close').click(function (e) {
+            //Cancel the link behavior
+            e.preventDefault();
+            $('#mask').removeClass('showing');
+            $('#maskmap').removeClass('showing');
+        });
+
+
+        $('#ddlAppIds').on('change', function () {
+            if ($("#ddlAppIds option:selected").index() > 0) {
+                var selectedValue = $(this).val();
+                $('#ddlAppIds').prop("selectedIndex", 0);
+                var url = '@Url.Action("ExportCounterlist", "CounterList", new { type = "_type_" })'
+                window.location.href = url.replace("_type_", selectedValue);
+
+
+            }
+        });
+        //Rev work start 16.06.2022 mantise 0024948: Show All checkbox required for Shops report
+        var mainCheckboxes = []
+
+        $('body').on('click', '#ddlshotype', function (e) {
+            console.log(e.target.name)
+            if (e.target.name == 'Show All') {
+                if (e.target.checked == true) {
+
+                    $('#ddlshotype').find(':checkbox[name!="Show All"]').each(function () {
+
+                        var itemId =$(this).attr("id");
+                        var isChk = $(this).attr("checked")
+
+                        var obj = {
+                            id: itemId,
+                            isChecked: isChk
+                        }
+                        mainCheckboxes.push(obj)
+                        $(this).prop('checked', false).attr('disabled', true)
+                    });
+                    console.log(arr)
+                } else {
+                    $('#ddlshotype').find(':checkbox[name!="Show All"]').each(function () {
+                        var itemId = $(this).attr("id");
+                        console.log("mainCheckboxes", mainCheckboxes)
+                        for (i = 0; i < mainCheckboxes.length; i++) {
+                            if (itemId == mainCheckboxes[i].id && mainCheckboxes[i].isChecked == 'checked') {
+                                $("#" + itemId).prop('checked', true).removeAttr("disabled");
+                            } else if (itemId == mainCheckboxes[i].id && mainCheckboxes[i].isChecked == undefined) {
+                                $("#" + itemId).prop('checked', false).removeAttr("disabled");
+                            } else {
+
+                            }
+                        }
+
+                    });
+                }
+
+            }
+        })
+        //Rev work close 16.06.2022 mantise 0024948: Show All checkbox required for Shops report
+    });
+
+    @*$('#ddlAppIds').on('change', function () {
+        if ($("#ddlAppIds option:selected").index() > 0) {
+            var selectedValue = $(this).val();
+            $('#ddlAppIds').prop("selectedIndex", 0);
+            /   $('#reportLink').prop('href', '/Attendance/ExportDesignation?type=' + selectedValue);
+            window.location.href = "/JobDetailsSetup/ExportDesignation?type=" + selectedValue;
+            var url = '@Url.Action("ExportCounterlist", "CounterList", new { type = "_type_" })'
+            window.location.href = url.replace("_type_", selectedValue);
+
+            var arr = [];
+            $('input.acheckbox:checkbox:checked').each(function () {
+                arr.push($(this).val());
+            });
+
+              alert($("#drpuser").val());
+            var surl = '@Url.Action("ExportCounterlist", "CounterList")';
+            var usr = $("#drpuser").val();
+            $.ajax({
+
+                url: surl,
+                async: false,
+
+                data: {
+                    StateId: $('#drpstate').val(),
+                    TypeID: arr.toString()
+                },
+
+                type: 'POST',
+                success: function (data) {
+                    $('#refreshgrid').html(data);
+                },
+
+                error: function () {
+
+                },
+
+            });
+
+            }
+    });*@
+
+    @*$('#ddlAppIds').on('change', function () {
+        if ($("#ddlAppIds option:selected").index() > 0) {
+            var selectedValue = $(this).val();
+            var desg = $("#drpdesignation").val();
+            var usrtype = $("#ddlusertypes").val();
+            $('#ddlAppIds').prop("selectedIndex", 0);
+            var url = '@Url.Action("ExportCounterlist", "CounterList", new { type = "_type_" })'
+            window.location.href = url.replace("_type_", selectedValue);
+
+
+        }
+    });*@
+
+
+
+
+    var StateId = [];
+    function StateSelectionChanged(s, e) {
+        StateGridLookup.gridView.GetSelectedFieldValues("ID", GetSelectedFieldValuesCallback);
+    }
+    function GetSelectedFieldValuesCallback(values) {
+
+        try {
+            StateId = [];
+            for (var i = 0; i < values.length; i++) {
+                StateId.push(values[i]);
+            }
+        } finally {
+            console.log(StateId);
+        }
+
+
+    }
+
+    function OnStartCallback(s, e) {
+        e.customArgs["StateId"] = StateId;
+        e.customArgs["TypeID"] = typeId;
+        e.customArgs["Ispageload"] = Ispageload;
+        //Rev 2.0 Mantis:0025585
+        if ($('#IsRevisitContactDetails').prop('checked')) {
+            e.customArgs["IsRevisitContactDetails"] = 1;
+        }
+        else {
+            e.customArgs["IsRevisitContactDetails"] = 0;
+        }
+        //End of Rev 2.0 Mantis:0025585
+    }
+
+
+    function StateStartCallback(s, e) {
+        e.customArgs["UserID"] = $("#hdnUserID").val();
+    }
+
+    function EmpStateLookupValChange() {
+        StateGridLookup.GetGridView().Refresh();
+        StateGridLookup.GetGridView().Refresh();
+    }
+    //Rev Pallab 25448
+    function OpenShopImage(imgfile) {
+
+        $('.image').attr({
+            'src': imgfile
+        });
+        $('#mask').addClass('showing');
+    }
+    //Rev end Pallab 25448
+</script>
+<link href="~/Content/media.css" rel="stylesheet" />
+
+<style>
+    #tblshoplist > thead > tr > th {
+        background: #5F65AD !important;
+        border-top: 1px solid #0f87cc;
+        color: #fff;
+    }
+
+    #tblshoplist thead > tr > th, #tblshoplist tbody > tr > th, #tblshoplist tfoot > tr > th, #tblshoplist thead > tr > td, #tblshoplist tbody > tr > td, #tblshoplist tfoot > tr > td {
+        padding: 1px 5px !important;
+    }
+
+    .tblspace > tbody > tr > td {
+        padding-right: 15px;
+    }
+
+    /*#tblshoplist {
+        width:200% !important;
+    }
+    .scrooler {
+        width:100%;
+        overflow-x:scroll;
+    }*/
+    .acheckbox {
+    }
+
+    #StateGridLookup_ET > tbody > tr > td:first-child, #DesigGridLookup_ET > tbody > tr > td:first-child, #EmpGridLookup_ET > tbody > tr > td:first-child {
+        display: none;
+    }
+
+    /*Rev 1.0*/
+
+    #BranchGridLookup {
+        min-height: 34px;
+        border-radius: 5px;
+    }
+
+    .dxeButtonEditButton_PlasticBlue {
+        background: #094e8c !important;
+        border-radius: 4px !important;
+        padding: 0 4px !important;
+    }
+
+    .chosen-container-single .chosen-single div {
+        background: #094e8c;
+        color: #fff;
+        border-radius: 4px;
+        height: 30px;
+        top: 1px;
+        right: 1px;
+        /*position:relative;*/
+    }
+
+        .chosen-container-single .chosen-single div b {
+            display: none;
+        }
+
+        .chosen-container-single .chosen-single div::after {
+            content: '<';
+            position: absolute;
+            top: 2px;
+            right: 3px;
+            font-size: 18px;
+            transform: rotate(269deg);
+            font-weight: 500;
+        }
+
+    .chosen-container-active.chosen-with-drop .chosen-single div {
+        background: #094e8c;
+        color: #fff;
+    }
+
+        .chosen-container-active.chosen-with-drop .chosen-single div::after {
+            transform: rotate(90deg);
+            right: 5px;
+        }
+
+    .calendar-icon {
+        position: absolute;
+        bottom: 8px;
+        right: 20px;
+        z-index: 0;
+        cursor: pointer;
+    }
+
+    .date-select .form-control {
+        position: relative;
+        z-index: 1;
+        background: transparent;
+    }
+
+    .h-branch-select {
+        position: relative;
+    }
+
+        .h-branch-select::after {
+            content: '<';
+            position: absolute;
+            top: 33px;
+            right: 13px;
+            font-size: 18px;
+            transform: rotate(269deg);
+            font-weight: 500;
+            background: #094e8c;
+            color: #fff;
+            height: 18px;
+            display: block;
+            width: 28px;
+            /* padding: 10px 0; */
+            border-radius: 4px;
+            text-align: center;
+            line-height: 19px;
+            z-index: 0;
+        }
+
+    .whclass.selectH {
+        -webkit-appearance: none;
+        position: relative;
+        z-index: 1;
+        background-color: transparent;
+    }
+
+        .whclass.selectH:focus-visible {
+            outline: none;
+        }
+
+        .whclass.selectH:focus {
+            border: 1px solid #164f93;
+        }
+
+    .dxeButtonEdit_PlasticBlue {
+        border: 1px Solid #ccc;
+    }
+
+    .chosen-container-single .chosen-single {
+        border: 1px solid #ccc;
+        background: #fff;
+        box-shadow: none;
+    }
+
+    .daterangepicker td.active, .daterangepicker td.active:hover {
+        background-color: #175396;
+    }
+
+    label {
+        font-weight: 500;
+    }
+
+    .dxgvHeader_PlasticBlue {
+        background: #164f94;
+    }
+
+    .dxgvSelectedRow_PlasticBlue td.dxgv {
+        color: #fff;
+    }
+
+    .dxeCalendarHeader_PlasticBlue {
+        background: #185598;
+    }
+
+    .dxgvControl_PlasticBlue, .dxgvDisabled_PlasticBlue,
+    .dxbButton_PlasticBlue,
+    .dxeCalendar_PlasticBlue,
+    .dxeEditArea_PlasticBlue {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    .dxgvEditFormDisplayRow_PlasticBlue td.dxgv, .dxgvDataRow_PlasticBlue td.dxgv, .dxgvDataRowAlt_PlasticBlue td.dxgv, .dxgvSelectedRow_PlasticBlue td.dxgv, .dxgvFocusedRow_PlasticBlue td.dxgv {
+        font-weight: 500;
+    }
+
+    .btnPadding .btn {
+        padding: 7px 14px !important;
+        border-radius: 4px;
+    }
+
+    .btnPadding {
+        padding-top: 24px !important;
+    }
+
+    .dxeButtonEdit_PlasticBlue {
+        border-radius: 5px;
+    }
+
+    #tblshoplist_wrapper .dataTables_scrollHeadInner table tr th {
+        background: #165092;
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    /*#refreshgrid {
+        background: #e5e5e5;
+        padding: 0 10px;
+        margin-top: 15px;
+        border-radius: 8px;
+    }*/
+
+
+    .styled-checkbox {
+        position: absolute;
+        opacity: 0;
+        z-index: 1;
+    }
+
+        .styled-checkbox + label {
+            position: relative;
+            /*cursor: pointer;*/
+            padding: 0;
+            margin-bottom: 0 !important;
+        }
+
+            .styled-checkbox + label:before {
+                content: "";
+                margin-right: 6px;
+                display: inline-block;
+                vertical-align: text-top;
+                width: 16px;
+                height: 16px;
+                /*background: #d7d7d7;*/
+                margin-top: 2px;
+                border-radius: 2px;
+                border: 1px solid #c5c5c5;
+            }
+
+        .styled-checkbox:hover + label:before {
+            background: #094e8c;
+        }
+
+
+        .styled-checkbox:checked + label:before {
+            background: #094e8c;
+        }
+
+        .styled-checkbox:disabled + label {
+            color: #b8b8b8;
+            cursor: auto;
+        }
+
+            .styled-checkbox:disabled + label:before {
+                box-shadow: none;
+                background: #ddd;
+            }
+
+        .styled-checkbox:checked + label:after {
+            content: "";
+            position: absolute;
+            left: 3px;
+            top: 9px;
+            background: white;
+            width: 2px;
+            height: 2px;
+            box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+            transform: rotate(45deg);
+        }
+
+    #dtstate {
+        padding-right: 8px;
+    }
+
+
+    /*Rev end 1.0*/
+
+    /*Rev 3.0*/
+    .tblspace {
+        width: 100%;
+    }
+
+    .w1 {
+        width: 80px;
+    }
+
+    .w2 {
+        width: 120px;
+    }
+
+    /*Rev end 3.0*/
+</style>
+
+<div class="breadCumb">
+    <span>Shop</span>
+</div>
+<div class="container">
+    <div class="form_main backBox p-3">
+
+
+        <table class="pull-left tblspace smblock mb-3">
+            <tr>
+                <td class="w1" id="dtstate">State : </td>
+                <td id="dtdesg2" style="width:180px;">
+                    @Html.Action("GetEmployeeWiseStateList", "MasterPopulate", new { UserID = @Session["userid"].ToString() })
+                </td>
+
+                <td class="w2" id="dtstate">Shop Types : </td>
+
+                <td id="ddlshotype">
+                    <ul class="list-inline" style="@*padding-top:13px*@ padding-top:13px;">
+                        @foreach (var item in Model.Shoptypes)
+                        {
+                            <li>
+                                @*Rev 1.0: "styled-checkbox" class add *@
+                                <input id="chk@(item.ID)" class="acheckbox styled-checkbox"
+                                       type="checkbox"
+                                       value="@item.ID"
+                                       checked="@item.IsChecked"
+                                       @*rev work start 16.06.2022 mantise 0024948 show all checkbox required for shops report*@
+                                       name="@item.Name"
+                                       @*rev work close 16.06.2022 mantise 0024948 show all checkbox required for shops report*@ />
+                                @*Rev 1.0*@
+                                @*@item.Name*@
+                                <label for="">@item.Name</label>
+                                @*Rev end 1.0*@
+                            </li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                @*Rev 3.0 : replace into div*@
+                @*Rev 2.0 Mantis:0025585*@
+                @*<td class="w10 inputSpacer" style="padding-top: 21px; width: 250px;">
+                        <input type="checkbox" id="IsRevisitContactDetails" name="IsRevisitContactDetails" value="0" style="margin-right:5px"><span class="w100">Show Revisit Contact Details</span>
+                    </td>*@
+                @*End of Rev 2.0 Mantis:0025585*@
+                @*<td style="padding-top:1px">
+                        <button type="button" id="btnshow" class="btn btn-success btnwidth">Show</button>
+                        <select name="ddlAppIds" class="btn btn-sm btn-primary" id="ddlAppIds">
+                            <option value="0">Export to</option>
+                            <option value="1">PDF</option>
+                            <option value="2">XLSX</option>
+                            <option value="3">XLS</option>
+                            <option value="4">RTF</option>
+                            <option value="5">CSV</option>
+                        </select>
+                    </td>*@
+                @*Rev end 3.0*@
+            </tr>
+
+            <tr></tr>
+        </table>
+        @*Rev 3.0 : replace into div*@
+        <div class="row pt-4">
+            @*Rev 2.0 Mantis:0025585*@
+            <div class="col-md-4 pt-2">
+                @*<input type="checkbox" id="IsRevisitContactDetails" name="IsRevisitContactDetails" value="0" style="margin-right:5px">
+                    <span class="">Show Multiple Contact Details</span>*@
+                <input class="styled-checkbox" type="checkbox" id="IsRevisitContactDetails" name="IsRevisitContactDetails" value="0" style="margin-right:5px">
+                <label for="">Show Multiple Contact Details</label>
+            </div>
+            @*End of Rev 2.0 Mantis:0025585*@
+            <div class="col-md-3">
+                <button type="button" id="btnshow" class="btn btn-success btnwidth">Show</button>
+                <select name="ddlAppIds" class="btn btn-sm btn-primary" id="ddlAppIds">
+                    <option value="0">Export to</option>
+                    <option value="1">PDF</option>
+                    <option value="2">XLSX</option>
+                    <option value="3">XLS</option>
+                    <option value="4">RTF</option>
+                    <option value="5">CSV</option>
+                </select>
+            </div>
+            <div class="clear"></div>
+        </div>
+        @*Rev end 3.0*@
+
+        <br />
+
+        <div class="scrooler">
+            <div id="refreshgrid">
+                @{
+                    Html.RenderAction("GetCounterlistPartial", "CounterList", new { StateId = Model.StateId, TypeID = Model.TypeID, Ispageload = "0" });
+                }
+            </div>
+        </div>
+        <input type="hidden" id="hdnUserID" value="@Session["userid"].ToString()" />
+        <input type="hidden" id="hdnStateMandatory" value="@ViewBag.StateMandatory" />
+    </div>
+</div>
+
+
+<div id="mask">
+    <div id="boxes">
+        <div class="inner">
+            <div id="dialog" class="window">
+                <a href="#" class="close"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <div id="popupfoot">
+
+
+                    <img src="#" class="image" alt="Image not found!"></img>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="maskmap">
+    <div id="boxesmap">
+        <div class="inner">
+            <div id="dialogmap" class="window">
+                <a href="#" class="close">CLOSE</a>
+                <div id="popupfootmap">
+
+                    <div id="map" style="width: 100%; height: 450px;"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
