@@ -82,3 +82,17 @@ C:\Pallab\BreezeFSMGIT_VS22-react\UtilityLayer\obj\Debug\UtilityLayer.csproj.Cor
 C:\Pallab\BreezeFSMGIT_VS22-react\UtilityLayer\obj\Debug\UtilityLayer.csproj.CopyComplete
 C:\Pallab\BreezeFSMGIT_VS22-react\UtilityLayer\obj\Debug\UtilityLayer.dll
 C:\Pallab\BreezeFSMGIT_VS22-react\UtilityLayer\obj\Debug\UtilityLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\UtilityLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\BusinessLogicLayer.dll
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\EntityLayer.dll
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\DataAccessLayer.dll
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\Aspose.Pdf.Kit.dll
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\Ionic.Zip.dll
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\BusinessLogicLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\EntityLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\bin\Debug\DataAccessLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\obj\Debug\UtilityLayer.csproj.AssemblyReference.cache
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\obj\Debug\UtilityLayer.csproj.CoreCompileInputs.cache
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\obj\Debug\UtilityLayer.csproj.CopyComplete
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\obj\Debug\UtilityLayer.dll
+C:\Projects\BreezeFSMReactServerSide\UtilityLayer\obj\Debug\UtilityLayer.pdb

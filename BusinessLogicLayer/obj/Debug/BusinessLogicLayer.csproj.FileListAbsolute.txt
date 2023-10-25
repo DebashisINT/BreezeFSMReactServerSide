@@ -107,3 +107,16 @@ C:\Pallab\BreezeFSMGIT_VS22-react\BusinessLogicLayer\obj\Debug\BusinessLogicLaye
 C:\Pallab\BreezeFSMGIT_VS22-react\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.csproj.CopyComplete
 C:\Pallab\BreezeFSMGIT_VS22-react\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.dll
 C:\Pallab\BreezeFSMGIT_VS22-react\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\BusinessLogicLayer.dll
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\BusinessLogicLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\Aspose.Pdf.Kit.dll
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\DataAccessLayer.dll
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\EntityLayer.dll
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\Ionic.Zip.dll
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\EntityLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\bin\Debug\DataAccessLayer.pdb
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.csproj.AssemblyReference.cache
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.csproj.CoreCompileInputs.cache
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.csproj.CopyComplete
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.dll
+C:\Projects\BreezeFSMReactServerSide\BusinessLogicLayer\obj\Debug\BusinessLogicLayer.pdb

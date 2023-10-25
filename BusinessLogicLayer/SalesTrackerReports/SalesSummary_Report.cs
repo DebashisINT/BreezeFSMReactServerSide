@@ -199,19 +199,34 @@ namespace BusinessLogicLayer.SalesTrackerReports
         }
         public DataTable _GetSalesSummaryReportTeam(string reportdate, string userid, string stateID, string BRANCHID, string desigid, string empid, string Type)
         { 
+            //DataTable ds = new DataTable();
+            //ProcedureExecute proc = new ProcedureExecute("PRC_FTSTEAMVISITDASHBOARD_REPORT");
+
+            int i = 0;
+            String con = System.Configuration.ConfigurationManager.AppSettings["DBConnectionDefault"];
+            SqlCommand sqlcmd = new SqlCommand();
+            SqlConnection sqlcon = new SqlConnection(con);
+            sqlcon.Open();
+
             DataTable ds = new DataTable();
-            ProcedureExecute proc = new ProcedureExecute("PRC_FTSTEAMVISITDASHBOARD_REPORT");
+            //ProcedureExecute proc = new ProcedureExecute("PRC_FTSDASHBOARD_REPORT");
+            sqlcmd = new SqlCommand("PRC_FTSTEAMVISITDASHBOARD_REPORT", sqlcon);
 
-            proc.AddPara("@TODAYDATE", reportdate);
-            proc.AddPara("@STATEID", stateID);
-            proc.AddPara("@DESIGNID", desigid);
-            proc.AddPara("@BRANCHID", BRANCHID);
-            proc.AddPara("@USERID", userid);
-            proc.AddPara("@EMPID", empid);
+            sqlcmd.Parameters.AddWithValue("@TODAYDATE", reportdate);
+            sqlcmd.Parameters.AddWithValue("@STATEID", stateID);
+            sqlcmd.Parameters.AddWithValue("@DESIGNID", desigid);
+            sqlcmd.Parameters.AddWithValue("@BRANCHID", BRANCHID);
+            sqlcmd.Parameters.AddWithValue("@USERID", userid);
+            sqlcmd.Parameters.AddWithValue("@EMPID", empid);
 
-            proc.AddPara("@ACTION", Type);
-            proc.AddPara("@RPTTYPE", "Detail");
-            ds = proc.GetTable();
+            sqlcmd.Parameters.AddWithValue("@ACTION", Type);
+            sqlcmd.Parameters.AddWithValue("@RPTTYPE", "Detail");
+
+            //ds = proc.GetTable();
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(ds);
+            sqlcon.Close();
 
             return ds;
         }
@@ -349,21 +364,35 @@ namespace BusinessLogicLayer.SalesTrackerReports
         // Mantis Issue 25468
         public DataTable _GetSalesSummaryReportTeamH(string reportdate, string userid, string stateID, string BRANCHID, string desigid, string empid, string Type)
         {
+            int i = 0;
+            String con = System.Configuration.ConfigurationManager.AppSettings["DBConnectionDefault"];
+            SqlCommand sqlcmd = new SqlCommand();
+            SqlConnection sqlcon = new SqlConnection(con);
+            sqlcon.Open();
+
             DataTable ds = new DataTable();
-            ProcedureExecute proc = new ProcedureExecute("PRC_FTSTEAMVISITDASHBOARD_REPORT_HIERARCHY");
+            //ProcedureExecute proc = new ProcedureExecute("PRC_FTSTEAMVISITDASHBOARD_REPORT_HIERARCHY");
+            sqlcmd = new SqlCommand("PRC_FTSTEAMVISITDASHBOARD_REPORT_HIERARCHY", sqlcon);
 
-            proc.AddPara("@TODAYDATE", reportdate);
-            proc.AddPara("@STATEID", stateID);
-            proc.AddPara("@DESIGNID", desigid);
-            proc.AddPara("@BRANCHID", BRANCHID);
-            proc.AddPara("@USERID", userid);
-            proc.AddPara("@EMPID", empid);
+            sqlcmd.Parameters.AddWithValue("@TODAYDATE", reportdate);
+            sqlcmd.Parameters.AddWithValue("@STATEID", stateID);
+            sqlcmd.Parameters.AddWithValue("@DESIGNID", desigid);
+            sqlcmd.Parameters.AddWithValue("@BRANCHID", BRANCHID);
+            sqlcmd.Parameters.AddWithValue("@USERID", userid);
+            sqlcmd.Parameters.AddWithValue("@EMPID", empid);
 
-            proc.AddPara("@ACTION", Type);
-            proc.AddPara("@RPTTYPE", "Detail");
-            ds = proc.GetTable();
+            sqlcmd.Parameters.AddWithValue("@ACTION", Type);
+            sqlcmd.Parameters.AddWithValue("@RPTTYPE", "Detail");
+
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(ds);
+            sqlcon.Close();
 
             return ds;
+            //ds = proc.GetTable();
+
+            //return ds;
         }
         // End of Mantis Issue 25468
     }

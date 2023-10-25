@@ -100,7 +100,75 @@ namespace MyShop.Models
         public string SupervisorID { get; set; }
     }
 
+    public class FSMDashboardGridViewTV
+    {
+        public string Employee { get; set; }
+        public string Designation { get; set; }
+        public string EmployeeID { get; set; }
+        public string Branch { get; set; }
+        public string LoginID { get; set; }
+        public string Channel { get; set; }
+        public string Circle { get; set; }
+        public string Section { get; set; }
+        public string Department { get; set; }
+        public string State { get; set; }
+        public string Supervisor { get; set; }
+        public string ContactNo { get; set; }
+        public string FirstInTime { get; set; }
+        public string LastLogoutTime { get; set; }
+        public string CurrentStatus { get; set; }
+        public string GPSInactivity { get; set; }
+        public string ShopsVisited { get; set; }
+        public string SalesValue { get; set; }
+        public string OrderValue { get; set; }
+        public string CollectionAmt { get; set; }
+        public string EMPID { get; set; }
+        public string AppliedLeaveDate { get; set; }
+        public string SupervisorID { get; set; }
+    }
+
+    public class FSMDashboardGridViewTVH
+    {
+        public string Employee { get; set; }
+        public string Designation { get; set; }
+        public string EmployeeID { get; set; }
+        public string Branch { get; set; }
+        public string LoginID { get; set; }
+        public string Channel { get; set; }
+        public string Circle { get; set; }
+        public string Section { get; set; }
+        public string Department { get; set; }
+        public string State { get; set; }
+        public string Supervisor { get; set; }
+        public string ContactNo { get; set; }
+        public string FirstInTime { get; set; }
+        public string LastLogoutTime { get; set; }
+        public string CurrentStatus { get; set; }
+        public string GPSInactivity { get; set; }
+        public string ShopsVisited { get; set; }
+        public string SalesValue { get; set; }
+        public string OrderValue { get; set; }
+        public string CollectionAmt { get; set; }
+        public string EMPID { get; set; }
+        public string AppliedLeaveDate { get; set; }
+        public string SupervisorID { get; set; }
+    }
+
     public class FSMDashboardGridViewShopDetails
+    {
+        public string ShopName { get; set; }
+        public string Address { get; set; }
+        public string ShopMobile { get; set; }
+        public string Type { get; set; }
+        public string VisitedDateTime { get; set; }
+        public string DurationSpent { get; set; }
+        public string Image { get; set; }
+        public string PartyStatus { get; set; }
+        public string ShopVisitimage { get; set; }
+
+    }
+
+    public class FSMDashboardGridViewShopDetailsFV
     {
         public string ShopName { get; set; }
         public string Address { get; set; }
