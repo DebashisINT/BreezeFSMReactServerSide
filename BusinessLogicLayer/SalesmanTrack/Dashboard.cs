@@ -194,21 +194,44 @@ namespace BusinessLogicLayer.SalesmanTrack
         // Team visit
         public DataSet CreateLINQforDashBoardTeamVisit(string stateid, string branchid)
         {
+            //int i = 0;
+            //DataSet ds = new DataSet();
+            //ProcedureExecute proc = new ProcedureExecute("prc_FSMDashboardData");
+
             int i = 0;
+            String con = System.Configuration.ConfigurationManager.AppSettings["DBConnectionDefault"];
+            SqlCommand sqlcmd = new SqlCommand();
+            SqlConnection sqlcon = new SqlConnection(con);
+            sqlcon.Open();
             DataSet ds = new DataSet();
-            ProcedureExecute proc = new ProcedureExecute("prc_FSMDashboardData");
+            // ProcedureExecute proc = new ProcedureExecute("prc_FSMDashboardData");
+            sqlcmd = new SqlCommand("prc_FSMDashboardData", sqlcon);
+
             if (branchid == null)
             {
                 branchid = "";
             }
 
-            proc.AddPara("@Action", "TODAYTEAMVISITDATA");
-            proc.AddPara("@ToDate", DateTime.Now.ToString("yyyy-MM-dd"));
-            proc.AddPara("@Fromdate", DateTime.Now.ToString("yyyy-MM-dd"));
-            proc.AddPara("@userid", Convert.ToString(HttpContext.Current.Session["userid"]));
-            proc.AddPara("@stateid", stateid);
-            proc.AddPara("@branchid", branchid);
-            ds = proc.GetDataSet();
+            //proc.AddPara("@Action", "TODAYTEAMVISITDATA");
+            //proc.AddPara("@ToDate", DateTime.Now.ToString("yyyy-MM-dd"));
+            //proc.AddPara("@Fromdate", DateTime.Now.ToString("yyyy-MM-dd"));
+            //proc.AddPara("@userid", Convert.ToString(HttpContext.Current.Session["userid"]));
+            //proc.AddPara("@stateid", stateid);
+            //proc.AddPara("@branchid", branchid);
+
+            sqlcmd.Parameters.AddWithValue("@Action", "TODAYTEAMVISITDATA");
+            sqlcmd.Parameters.AddWithValue("@ToDate", DateTime.Now.ToString("yyyy-MM-dd"));
+            sqlcmd.Parameters.AddWithValue("@Fromdate", DateTime.Now.ToString("yyyy-MM-dd"));
+            sqlcmd.Parameters.AddWithValue("@userid", Convert.ToString(HttpContext.Current.Session["userid"]));
+            sqlcmd.Parameters.AddWithValue("@stateid", stateid);
+            sqlcmd.Parameters.AddWithValue("@branchid", branchid);
+
+            //ds = proc.GetDataSet();
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(ds);
+            sqlcon.Close();
+
             return ds;
         }
         //End
@@ -221,21 +244,36 @@ namespace BusinessLogicLayer.SalesmanTrack
         // Mantis Issue 25468
         public DataSet CreateLINQforDashBoardTeamVisitH(string stateid, string branchid)
         {
+            //int i = 0;
+            //DataSet ds = new DataSet();
+
             int i = 0;
+            String con = System.Configuration.ConfigurationManager.AppSettings["DBConnectionDefault"];
+            SqlCommand sqlcmd = new SqlCommand();
+            SqlConnection sqlcon = new SqlConnection(con);
+            sqlcon.Open();
             DataSet ds = new DataSet();
-            ProcedureExecute proc = new ProcedureExecute("prc_FSMDashboardDataHierarchy");
+
+            //ProcedureExecute proc = new ProcedureExecute("prc_FSMDashboardDataHierarchy");
+            sqlcmd = new SqlCommand("prc_FSMDashboardDataHierarchy", sqlcon);
+
             if (branchid == null)
             {
                 branchid = "";
             }
 
-            proc.AddPara("@Action", "TODAYTEAMVISITDATA");
-            proc.AddPara("@ToDate", DateTime.Now.ToString("yyyy-MM-dd"));
-            proc.AddPara("@Fromdate", DateTime.Now.ToString("yyyy-MM-dd"));
-            proc.AddPara("@userid", Convert.ToString(HttpContext.Current.Session["userid"]));
-            proc.AddPara("@stateid", stateid);
-            proc.AddPara("@branchid", branchid);
-            ds = proc.GetDataSet();
+            sqlcmd.Parameters.AddWithValue("@Action", "TODAYTEAMVISITDATA");
+            sqlcmd.Parameters.AddWithValue("@ToDate", DateTime.Now.ToString("yyyy-MM-dd"));
+            sqlcmd.Parameters.AddWithValue("@Fromdate", DateTime.Now.ToString("yyyy-MM-dd"));
+            sqlcmd.Parameters.AddWithValue("@userid", Convert.ToString(HttpContext.Current.Session["userid"]));
+            sqlcmd.Parameters.AddWithValue("@stateid", stateid);
+            sqlcmd.Parameters.AddWithValue("@branchid", branchid);
+            //ds = proc.GetDataSet();
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(ds);
+            sqlcon.Close();
+
             return ds;
         }
 
@@ -392,15 +430,35 @@ namespace BusinessLogicLayer.SalesmanTrack
 
         public DataSet GetAttendanceDashboard(string userid, string month, string year, string action, string CREATE_USERID="0")
         {
-            DataSet ds = new DataSet();
-            ProcedureExecute proc = new ProcedureExecute("PRC_FTSATTNDASHBOARD");
+            //DataSet ds = new DataSet();
+            //ProcedureExecute proc = new ProcedureExecute("PRC_FTSATTNDASHBOARD");
 
-            proc.AddPara("@User_iD", userid);
-            proc.AddPara("@month", month);
-            proc.AddPara("@year", year);
-            proc.AddPara("@action", action);
-            proc.AddPara("@CREATE_USERID", CREATE_USERID);
-            ds = proc.GetDataSet();
+            int i = 0;
+            String con = System.Configuration.ConfigurationManager.AppSettings["DBConnectionDefault"];
+            SqlCommand sqlcmd = new SqlCommand();
+            SqlConnection sqlcon = new SqlConnection(con);
+            sqlcon.Open();
+            DataSet ds = new DataSet();
+            // ProcedureExecute proc = new ProcedureExecute("prc_FSMDashboardData");
+            sqlcmd = new SqlCommand("PRC_FTSATTNDASHBOARD", sqlcon);
+
+            //proc.AddPara("@User_iD", userid);
+            //proc.AddPara("@month", month);
+            //proc.AddPara("@year", year);
+            //proc.AddPara("@action", action);
+            //proc.AddPara("@CREATE_USERID", CREATE_USERID);
+            //ds = proc.GetDataSet();
+
+            sqlcmd.Parameters.AddWithValue("@User_iD", userid);
+            sqlcmd.Parameters.AddWithValue("@month", month);
+            sqlcmd.Parameters.AddWithValue("@year", year);
+            sqlcmd.Parameters.AddWithValue("@action", action);
+            sqlcmd.Parameters.AddWithValue("@CREATE_USERID", CREATE_USERID);
+
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(ds);
+            sqlcon.Close();
 
             return ds;
         }

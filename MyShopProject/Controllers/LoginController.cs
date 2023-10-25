@@ -53,7 +53,6 @@ namespace MyShop.Controllers
             Validuser = oDBEngine.AuthenticateUser(omodel.username, Encryptpass).ToString();
             if (Validuser == "Y")
             {
-                var token = GenerateJwtToken(omodel.username);
                 //return RedirectToAction("FSMDashboard", "MYSHOP/DashboardMenu");
                 return Json(new { Validuser = "Y" });
             }
@@ -63,11 +62,6 @@ namespace MyShop.Controllers
                 //return View();
                 return Json(new { Validuser = "N" });
             }
-        }
-
-        private object GenerateJwtToken(string username)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -213,6 +213,7 @@ namespace MyShop.Areas.MYSHOP.Controllers
             return Json(Dashboarddata);
         }
         // Team Visit
+
         public JsonResult GetDashboardDataVisit(string stateid, string branchid)
         {
             Dashboard dashboarddataobj = new Dashboard();
@@ -586,8 +587,17 @@ namespace MyShop.Areas.MYSHOP.Controllers
             return jsonResult;
         }
         // Team Visit
-        public PartialViewResult DashboardGridViewTeam(FSMDashBoardFilter dd)
+        //public PartialViewResult DashboardGridViewTeam(FSMDashBoardFilter dd, int userid)
+        public JsonResult DashboardGridViewTeam(FSMDashBoardFilter dd, int userid)
         {
+            //ViewBag.WindowSize = dd.WindowSize;
+            //SalesSummary_Report objgps = new SalesSummary_Report();
+            //DBEngine objdb = new DBEngine();
+            //DataTable dbDashboardData = new DataTable();
+            //string query = "";
+            //string orderby = "";
+
+            List<FSMDashboardGridViewTV> dashboardGridobj = new List<FSMDashboardGridViewTV>();
             ViewBag.WindowSize = dd.WindowSize;
             SalesSummary_Report objgps = new SalesSummary_Report();
             DBEngine objdb = new DBEngine();
@@ -624,21 +634,104 @@ namespace MyShop.Areas.MYSHOP.Controllers
 
                 // mantis issue 25567 
                 //DataTable dt = objgps._GetSalesSummaryReportTeam(DateTime.Now.ToString("yyyy-MM-dd"), Convert.ToString(Session["userid"]), dd.StateId == "0" ? "" : dd.StateId, dd.BranchIdTV, "", "", dd.FilterName);
-                DataTable dt = objgps._GetSalesSummaryReportTeam(DateTime.Now.ToString("yyyy-MM-dd"), Convert.ToString(Session["userid"]), dd.StateId == "0" ? "" : dd.StateId, dd.BranchIdTV == "0" ? "" : dd.BranchIdTV, "", "", dd.FilterName);
+                DataTable dt = objgps._GetSalesSummaryReportTeam(DateTime.Now.ToString("yyyy-MM-dd"), Convert.ToString(userid), dd.StateId == "0" ? "" : dd.StateId, dd.BranchIdTV == "0" ? "" : dd.BranchIdTV, "", "", dd.FilterName);
                 // End of mantis issue 25567
 
-                query = "Select " + ColumnName + " from FTSTEAMVISITDASHBOARD_REPORT where USERID='" + Convert.ToString(Session["userid"]) + "' and ACTION='" + Convert.ToString(dd.FilterName) + "'";
+                query = "Select " + ColumnName + " from FTSTEAMVISITDASHBOARD_REPORT where USERID='" + Convert.ToString(userid) + "' and ACTION='" + Convert.ToString(dd.FilterName) + "'";
 
                 query += orderby;
 
                 dbDashboardData = objdb.GetDataTable(query);
+                FSMDashboardGridViewTV ObjGrid;
+
+                if (dd.FilterName == "AT_WORK" && dbDashboardData.Rows.Count > 0)
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTV();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.LoginID = Convert.ToString(item["Login ID"]);
+                        ObjGrid.FirstInTime = Convert.ToString(item["First in time"]);
+                        ObjGrid.LastLogoutTime = Convert.ToString(item["Last logout time"]);
+                        ObjGrid.CurrentStatus = Convert.ToString(item["Current Status"]);
+                        ObjGrid.GPSInactivity = Convert.ToString(item["GPS Inactivity"]);
+                        ObjGrid.ShopsVisited = Convert.ToString(item["Shops Visited"]);
+                        ObjGrid.SalesValue = Convert.ToString(item["Sales Value"]);
+                        ObjGrid.CollectionAmt = Convert.ToString(item["Collection Amt."]);
+                        ObjGrid.Channel = Convert.ToString(item["Channel"]);
+                        ObjGrid.Circle = Convert.ToString(item["Circle"]);
+                        ObjGrid.Section = Convert.ToString(item["Section"]);
+                        ObjGrid.EMPID = Convert.ToString(item["EMPID"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+                }
+                else if (dd.FilterName == "NOT_LOGIN")
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTV();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.State = Convert.ToString(item["State"]);
+                        ObjGrid.Supervisor = Convert.ToString(item["Supervisor"]);
+                        ObjGrid.SupervisorID = Convert.ToString(item["Supervisor ID"]);
+                        ObjGrid.LoginID = Convert.ToString(item["Login ID"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+
+                }
+
+                else if (dd.FilterName == "ON_LEAVE")
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTV();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.AppliedLeaveDate = Convert.ToString(item["Applied Leave Date"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+                }
+
+                else if (dd.FilterName == "EMP" && dbDashboardData.Rows.Count > 0)
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTV();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.Supervisor = Convert.ToString(item["Supervisor"]);
+                        ObjGrid.SupervisorID = Convert.ToString(item["Supervisor ID"]);
+                        ObjGrid.LoginID = Convert.ToString(item["Login ID"]);
+                        ObjGrid.Channel = Convert.ToString(item["Channel"]);
+                        ObjGrid.Circle = Convert.ToString(item["Circle"]);
+                        ObjGrid.Section = Convert.ToString(item["Section"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+                }
             }
             // Rev Tanmoy store query in tempdata
             // TempData["DashboardGridView"] = dbDashboardData;
             TempData["DashboardGridViewTeam"] = query;
             //End Rev 
             // DataTable MyInstrumentsList = null;
-            return PartialView(dbDashboardData);
+            //return PartialView(dbDashboardData);
+            var jsonResult = Json(dashboardGridobj, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
        
@@ -802,13 +895,39 @@ namespace MyShop.Areas.MYSHOP.Controllers
             //return PartialView(dbDashboardData);
         }
 
-        public PartialViewResult DashboardGridViewDetailsFV(FSMDashBoardFilter dd, int userid)
+        //public PartialViewResult DashboardGridViewDetailsFV(FSMDashBoardFilter dd, int userid)
+        public JsonResult DashboardGridViewDetailsFV(FSMDashBoardFilter dd, int userid)
         {
+            List<FSMDashboardGridViewShopDetailsFV> dashboardGridobj = new List<FSMDashboardGridViewShopDetailsFV>();
             ViewBag.WindowSize = dd.WindowSize;
             DataTable dbDashboardData = new DataTable();
             dbDashboardData = dashbrd.GetSalesManVisitDetails(dd.EMPCODE, userid);
-            TempData["DashboardGridViewDetailsFV"] = dbDashboardData;
-            return PartialView(dbDashboardData);
+
+            FSMDashboardGridViewShopDetailsFV ObjGrid;
+
+            foreach (DataRow item in dbDashboardData.Rows)
+            {
+                ObjGrid = new FSMDashboardGridViewShopDetailsFV();
+                ObjGrid.ShopName = Convert.ToString(item["Shop Name"]);
+                ObjGrid.Address = Convert.ToString(item["Address"]);
+                ObjGrid.ShopMobile = Convert.ToString(item["Shop Mobile"]);
+                ObjGrid.Type = Convert.ToString(item["Type"]);
+                ObjGrid.VisitedDateTime = Convert.ToString(item["Visited Date and Time"]);
+                ObjGrid.DurationSpent = Convert.ToString(item["Duration Spent"]);
+                //ObjGrid.Image = Convert.ToString(item["Image"]);
+                ObjGrid.Image = Convert.ToString(item["Image"]);
+                ObjGrid.PartyStatus = Convert.ToString(item["Party Status"]);
+                ObjGrid.ShopVisitimage = Convert.ToString(item["shopvisit_image"]);
+                dashboardGridobj.Add(ObjGrid);
+            }
+            TempData["DashboardGridViewDetails"] = dbDashboardData;
+
+            return Json(dashboardGridobj);
+            //ViewBag.WindowSize = dd.WindowSize;
+            //DataTable dbDashboardData = new DataTable();
+            //dbDashboardData = dashbrd.GetSalesManVisitDetails(dd.EMPCODE, userid);
+            //TempData["DashboardGridViewDetailsFV"] = dbDashboardData;
+            //return PartialView(dbDashboardData);
         }
         public PartialViewResult DashboardGridViewSalesmanDetail(string ID, string action, string rptype, string empid, string stateid, string designid)
         {
@@ -1757,7 +1876,7 @@ namespace MyShop.Areas.MYSHOP.Controllers
 
         #endregion
 
-        public JsonResult GetAttendanceResults()
+        public JsonResult GetAttendanceResults(int userid)
         {
 
 
@@ -1765,7 +1884,7 @@ namespace MyShop.Areas.MYSHOP.Controllers
             attendanceResult Dashboarddata = new attendanceResult();
             try
             {
-                DataSet objData = dashboarddataobj.GetAttendanceDashboard("", "", "", "GETBOXDATA", Session["userid"].ToString());
+                DataSet objData = dashboarddataobj.GetAttendanceDashboard("", "", "", "GETBOXDATA", Convert.ToString(userid));
                 //DataTable objData = dashboarddataobj.GetDashboardAttendanceData();
 
                 if (objData != null && objData.Tables[0] != null && objData.Tables[0].Rows.Count > 0)
@@ -1783,7 +1902,10 @@ namespace MyShop.Areas.MYSHOP.Controllers
 
             }
 
-            return Json(Dashboarddata);
+            //return Json(Dashboarddata);
+            var jsonResult = Json(Dashboarddata, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
 
 
         }
@@ -1823,7 +1945,7 @@ namespace MyShop.Areas.MYSHOP.Controllers
         }
 
 
-        public JsonResult GetUserData()
+        public JsonResult GetUserData(int userid)
         {
 
 
@@ -1831,7 +1953,7 @@ namespace MyShop.Areas.MYSHOP.Controllers
             List<userClass> Userdata = new List<userClass>();
             try
             {
-                DataSet objData = dashboarddataobj.GetAttendanceDashboard("", "", "", "GETUSER", Session["userid"].ToString());
+                DataSet objData = dashboarddataobj.GetAttendanceDashboard("", "", "", "GETUSER", Convert.ToString(userid));
                 //DataTable objData = dashboarddataobj.GetDashboardAttendanceData();
 
                 if (objData != null && objData.Tables[0] != null && objData.Tables[0].Rows.Count > 0)
@@ -1851,7 +1973,10 @@ namespace MyShop.Areas.MYSHOP.Controllers
 
             }
 
-            return Json(Userdata);
+            //return Json(Userdata);
+            var jsonResult = Json(Userdata, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
 
 
         }
@@ -2589,8 +2714,16 @@ namespace MyShop.Areas.MYSHOP.Controllers
             return Json(Dashboarddata);
         }
 
-        public PartialViewResult DashboardGridViewTeamH(FSMDashBoardFilter dd)
+        public JsonResult DashboardGridViewTeamH(FSMDashBoardFilter dd, int userid)
         {
+            //ViewBag.WindowSize = dd.WindowSize;
+            //SalesSummary_Report objgps = new SalesSummary_Report();
+            //DBEngine objdb = new DBEngine();
+            //DataTable dbDashboardData = new DataTable();
+            //string query = "";
+            //string orderby = "";
+
+            List<FSMDashboardGridViewTVH> dashboardGridobj = new List<FSMDashboardGridViewTVH>();
             ViewBag.WindowSize = dd.WindowSize;
             SalesSummary_Report objgps = new SalesSummary_Report();
             DBEngine objdb = new DBEngine();
@@ -2625,20 +2758,103 @@ namespace MyShop.Areas.MYSHOP.Controllers
                     ColumnName = "EMPNAME [Employee],DESIGNATION [Designation],EMPID [Employee ID],BRANCHDESC [Branch],REPORTTO [Supervisor], REPORTTOUID [Supervisor ID],CONTACTNO [Login ID], CHANNEL [Channel],CIRCLE [Circle],SECTION [Section]";
                 }
 
-                DataTable dt = objgps._GetSalesSummaryReportTeamH(DateTime.Now.ToString("yyyy-MM-dd"), Convert.ToString(Session["userid"]), dd.StateId == "0" ? "" : dd.StateId, dd.BranchIdTV == "0" ? "" : dd.BranchIdTV, "", "", dd.FilterName);
+                DataTable dt = objgps._GetSalesSummaryReportTeamH(DateTime.Now.ToString("yyyy-MM-dd"), Convert.ToString(userid), dd.StateId == "0" ? "" : dd.StateId, dd.BranchIdTV == "0" ? "" : dd.BranchIdTV, "", "", dd.FilterName);
 
-                query = "Select " + ColumnName + " from FTSTEAMVISITDASHBOARD_REPORT_HIERARCHY where USERID='" + Convert.ToString(Session["userid"]) + "' and ACTION='" + Convert.ToString(dd.FilterName) + "'";
+                query = "Select " + ColumnName + " from FTSTEAMVISITDASHBOARD_REPORT_HIERARCHY where USERID='" + Convert.ToString(userid) + "' and ACTION='" + Convert.ToString(dd.FilterName) + "'";
 
                 query += orderby;
 
                 dbDashboardData = objdb.GetDataTable(query);
+                FSMDashboardGridViewTVH ObjGrid;
+
+                if (dd.FilterName == "AT_WORK" && dbDashboardData.Rows.Count > 0)
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTVH();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.LoginID = Convert.ToString(item["Login ID"]);
+                        ObjGrid.FirstInTime = Convert.ToString(item["First in time"]);
+                        ObjGrid.LastLogoutTime = Convert.ToString(item["Last logout time"]);
+                        ObjGrid.CurrentStatus = Convert.ToString(item["Current Status"]);
+                        ObjGrid.GPSInactivity = Convert.ToString(item["GPS Inactivity"]);
+                        ObjGrid.ShopsVisited = Convert.ToString(item["Shops Visited"]);
+                        ObjGrid.SalesValue = Convert.ToString(item["Sales Value"]);
+                        ObjGrid.CollectionAmt = Convert.ToString(item["Collection Amt."]);
+                        ObjGrid.Channel = Convert.ToString(item["Channel"]);
+                        ObjGrid.Circle = Convert.ToString(item["Circle"]);
+                        ObjGrid.Section = Convert.ToString(item["Section"]);
+                        ObjGrid.EMPID = Convert.ToString(item["EMPID"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+                }
+                else if (dd.FilterName == "NOT_LOGIN")
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTVH();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.State = Convert.ToString(item["State"]);
+                        ObjGrid.Supervisor = Convert.ToString(item["Supervisor"]);
+                        ObjGrid.SupervisorID = Convert.ToString(item["Supervisor ID"]);
+                        ObjGrid.LoginID = Convert.ToString(item["Login ID"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+
+                }
+
+                else if (dd.FilterName == "ON_LEAVE")
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTVH();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.AppliedLeaveDate = Convert.ToString(item["Applied Leave Date"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+                }
+
+                else if (dd.FilterName == "EMP" && dbDashboardData.Rows.Count > 0)
+                {
+                    foreach (DataRow item in dbDashboardData.Rows)
+                    {
+                        ObjGrid = new FSMDashboardGridViewTVH();
+                        ObjGrid.Employee = Convert.ToString(item["Employee"]);
+                        ObjGrid.Designation = Convert.ToString(item["Designation"]);
+                        ObjGrid.EmployeeID = Convert.ToString(item["Employee ID"]);
+                        ObjGrid.Branch = Convert.ToString(item["Branch"]);
+                        ObjGrid.Supervisor = Convert.ToString(item["Supervisor"]);
+                        ObjGrid.SupervisorID = Convert.ToString(item["Supervisor ID"]);
+                        ObjGrid.LoginID = Convert.ToString(item["Login ID"]);
+                        ObjGrid.Channel = Convert.ToString(item["Channel"]);
+                        ObjGrid.Circle = Convert.ToString(item["Circle"]);
+                        ObjGrid.Section = Convert.ToString(item["Section"]);
+                        dashboardGridobj.Add(ObjGrid);
+
+                    }
+                }
             }
             // Rev Tanmoy store query in tempdata
             // TempData["DashboardGridView"] = dbDashboardData;
             TempData["DashboardGridViewTeamH"] = query;
             //End Rev 
             // DataTable MyInstrumentsList = null;
-            return PartialView(dbDashboardData);
+            //return PartialView(dbDashboardData);
+            var jsonResult = Json(dashboardGridobj, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
 
